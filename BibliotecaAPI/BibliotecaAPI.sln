@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaAPI", "BibliotecaAPI.csproj", "{4214990B-0FDE-477F-BE96-15689123E852}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BibliotecaApi.Tests", "..\BibliotecaApi.Tests\BibliotecaApi.Tests.csproj", "{5FFC4F17-1C96-4DF1-A1AC-05BDEE2C801C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4214990B-0FDE-477F-BE96-15689123E852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4214990B-0FDE-477F-BE96-15689123E852}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4214990B-0FDE-477F-BE96-15689123E852}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4214990B-0FDE-477F-BE96-15689123E852}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FFC4F17-1C96-4DF1-A1AC-05BDEE2C801C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FFC4F17-1C96-4DF1-A1AC-05BDEE2C801C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FFC4F17-1C96-4DF1-A1AC-05BDEE2C801C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FFC4F17-1C96-4DF1-A1AC-05BDEE2C801C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
