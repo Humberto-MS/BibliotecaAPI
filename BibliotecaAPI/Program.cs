@@ -50,7 +50,7 @@ builder.Services.AddTransient<HashService>();
 builder.Services.AddCors ( opciones => {
     opciones.AddDefaultPolicy ( builder => 
         builder
-            .WithOrigins ( "*" )
+            .AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader()
             .WithExposedHeaders ( [ "cantidadTotalRegistros" ] ) );

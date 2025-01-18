@@ -10,6 +10,9 @@ namespace BibliotecaAPI.Utilities {
             CreateMap<Autor, AutorDTOConLibros> ()
                 .ForMember ( autor_dto => autor_dto.Libros, opciones => opciones.MapFrom ( MapAutorDTOLibros ) );
 
+            CreateMap<LibroCreacionDTO, AutorLibro> ()
+                .ForMember ( ent => ent.Libro, config => config.MapFrom ( dto => new Libro { Titulo = dto.Titulo } ) );
+
             CreateMap<LibroCreacionDTO, Libro>()
                 .ForMember ( libro => libro.AutoresLibros, opciones => opciones.MapFrom ( MapAutoresLibros ) );
             CreateMap<Libro, LibroDTO> ();

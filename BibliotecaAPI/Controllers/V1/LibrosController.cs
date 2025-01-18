@@ -42,24 +42,48 @@ namespace BibliotecaAPI.Controllers.V1 {
 
         [HttpPost ( Name = "CrearLibro" )]
         public async Task<ActionResult> Post ( LibroCreacionDTO libro_creacion_dto ) {
-            if ( libro_creacion_dto.AutoresIds is null ) return BadRequest ( "No se puede crear un libro sin autores" );
-
+            if ( libro_creacion_dto.AutoresIds is null || libro_creacion_dto.AutoresIds.Count == 0 ) {
+                ModelState.AddModelError ( nameof ( libro_creacion_dto.AutoresIds ), "No se puede crear un libro sin autores" );
+                return ValidationProblem ();
+            }
+                
             var autores_ids = await context.Autores
                 .Where ( autorBD => libro_creacion_dto.AutoresIds.Contains ( autorBD.Id ) ).Select ( x => x.Id ).ToListAsync ();
 
-            if ( libro_creacion_dto.AutoresIds.Count != autores_ids.Count )
-                return BadRequest ( "No existe uno o más de los autores enviados" );
-
+            if ( libro_creacion_dto.AutoresIds.Count != autores_ids.Count ) {
+                var autores_no_existen = libro_creacion_dto.AutoresIds.Except ( autores_ids );
+                var autores_no_existen_string = string.Join ( ",", autores_no_existen );
+                var mensaje_de_error = $"Los siguientes autores no existen: {autores_no_existen_string}";
+                ModelState.AddModelError ( nameof ( libro_creacion_dto.AutoresIds ), mensaje_de_error );
+                return ValidationProblem ();
+            }
+                
             var libro = mapper.Map<Libro> ( libro_creacion_dto );
             AsignarOrdenAutores ( libro );
             context.Add ( libro );
             await context.SaveChangesAsync ();
             var libro_dto = mapper.Map<LibroDTO> ( libro );
-            return CreatedAtRoute ( "obtenerLibro", new { id = libro.Id }, libro_dto );
+            return CreatedAtRoute ( "ObtenerLibro", new { id = libro.Id }, libro_dto );
         }
 
         [HttpPut ( "{id:int}", Name = "ActualizarLibro" )]
         public async Task<ActionResult> Put ( int id, LibroCreacionDTO libro_creacion_dto ) {
+            if ( libro_creacion_dto.AutoresIds is null || libro_creacion_dto.AutoresIds.Count == 0 ) {
+                ModelState.AddModelError ( nameof ( libro_creacion_dto.AutoresIds ), "No se puede crear un libro sin autores" );
+                return ValidationProblem ();
+            }
+
+            var autores_ids = await context.Autores
+                .Where ( autorBD => libro_creacion_dto.AutoresIds.Contains ( autorBD.Id ) ).Select ( x => x.Id ).ToListAsync ();
+
+            if ( libro_creacion_dto.AutoresIds.Count != autores_ids.Count ) {
+                var autores_no_existen = libro_creacion_dto.AutoresIds.Except ( autores_ids );
+                var autores_no_existen_string = string.Join ( ",", autores_no_existen );
+                var mensaje_de_error = $"Los siguientes autores no existen: {autores_no_existen_string}";
+                ModelState.AddModelError ( nameof ( libro_creacion_dto.AutoresIds ), mensaje_de_error );
+                return ValidationProblem ();
+            }
+
             var libro_db = await context.Libros
                 .Include ( x => x.AutoresLibros )
                 .FirstOrDefaultAsync ( x => x.Id == id );
@@ -79,7 +103,7 @@ namespace BibliotecaAPI.Controllers.V1 {
             var libro_dto = mapper.Map<LibroPatchDTO> ( libro_db );
             patch_document.ApplyTo ( libro_dto, ModelState );
             var es_valido = TryValidateModel ( libro_dto );
-            if ( !es_valido ) return BadRequest ( ModelState );
+            if ( !es_valido ) return ValidationProblem();
             mapper.Map ( libro_dto, libro_db );
             await context.SaveChangesAsync ();
             return NoContent ();

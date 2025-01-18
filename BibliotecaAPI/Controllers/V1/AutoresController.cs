@@ -26,11 +26,11 @@ namespace BibliotecaAPI.Controllers.V1 {
         [HttpGet ( Name = "ObtenerAutores" )]
         [AllowAnonymous]
         [ServiceFilter ( typeof ( HATEOASAutorFilterAttribute ) )]
-        public async Task<ActionResult<List<AutorDTO>>> Get ( [FromQuery] PaginacionDTO paginacion_dto ) {
+        public async Task<IEnumerable<AutorDTO>> Get ( [FromQuery] PaginacionDTO paginacion_dto ) {
             var queryable = context.Autores.AsQueryable();
             await HttpContext.InsertarParametrosPaginacionEnCabecera ( queryable );
             var autores = await queryable.OrderBy ( autor => autor.Nombre ).Paginar ( paginacion_dto ).ToListAsync();
-            return mapper.Map<List<AutorDTO>> ( autores );
+            return mapper.Map<IEnumerable<AutorDTO>> ( autores );
         }
 
         [HttpGet ( "{id:int}", Name = "ObtenerAutor" )] // api/autores/id

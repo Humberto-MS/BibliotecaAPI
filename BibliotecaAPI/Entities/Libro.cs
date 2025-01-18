@@ -12,8 +12,8 @@ namespace BibliotecaAPI.Entities
         [StringLength ( maximumLength: 250 )]
         public required string Titulo { get; set; }
 
-        public required List<Comentario> Comentarios { get; set; }
-        public required List<AutorLibro> AutoresLibros { get; set; }
+        public List<Comentario> Comentarios { get; set; } = [];
+        public List<AutorLibro> AutoresLibros { get; set; } = [];
         public DateTime? FechaPublicacion { get; set; }
     }
 }

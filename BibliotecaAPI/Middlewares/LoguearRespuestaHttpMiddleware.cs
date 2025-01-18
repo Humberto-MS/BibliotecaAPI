@@ -8,26 +8,18 @@ namespace BibliotecaAPI.Middlewares {
     }
 
     public class LoguearRespuestaHttpMiddleware {
-        private readonly RequestDelegate siguiente;
-        private readonly ILogger<LoguearRespuestaHttpMiddleware> logger;
+        private readonly RequestDelegate next;
 
-        public LoguearRespuestaHttpMiddleware ( RequestDelegate siguiente, 
-            ILogger<LoguearRespuestaHttpMiddleware> logger ) {
-            this.siguiente = siguiente;
-            this.logger = logger;
+        public LoguearRespuestaHttpMiddleware ( RequestDelegate siguiente ) {
+            this.next = siguiente;
         }
 
         public async Task InvokeAsync ( HttpContext contexto ) {
             using ( var ms = new MemoryStream () ) {
-                var cuerpo_original_respuesta = contexto.Response.Body;
-                contexto.Response.Body = ms;
-                await siguiente ( contexto );
-                ms.Seek ( 0, SeekOrigin.Begin );
-                string respuesta = new StreamReader ( ms ).ReadToEnd ();
-                ms.Seek ( 0, SeekOrigin.Begin );
-                await ms.CopyToAsync ( cuerpo_original_respuesta );
-                contexto.Response.Body = cuerpo_original_respuesta;
-                logger.LogInformation ( respuesta );
+                var logger = contexto.RequestServices.GetRequiredService<ILogger<Program>> ();
+                logger.LogInformation ( $"Petición: {contexto.Request.Method} {contexto.Request.Path}" );
+                await next.Invoke ( contexto ); 
+                logger.LogInformation ( $"Respuesta: {contexto.Response.StatusCode}" );
             }
         }
     }
